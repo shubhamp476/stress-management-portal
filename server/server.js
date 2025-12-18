@@ -1,22 +1,26 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import connectDB from "./config/db.js";
+
 import authRoutes from "./routes/authRoutes.js";
-import testRoutes from "./routes/testRoutes.js";
 import stressRoutes from "./routes/stressRoutes.js";
 import recommendationRoutes from "./routes/recommendationRoutes.js";
 
+dotenv.config();
+connectDB();
 
+const app = express();
 
-dotenv.config();       
-connectDB();           
+/* 🔥 CORS FIX (MOST IMPORTANT) */
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
-const app = express(); 
 app.use(express.json());
 
-// 👇 routes AFTER app initialization
 app.use("/api/auth", authRoutes);
-app.use("/api/test", testRoutes);
 app.use("/api/stress", stressRoutes);
 app.use("/api/recommendations", recommendationRoutes);
 
