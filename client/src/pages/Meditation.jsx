@@ -1,34 +1,67 @@
+import { useEffect, useState } from "react";
+import API from "../services/contentApi";
+
 export default function Meditation() {
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    API.get("/Meditation")
+      .then(res => setItems(res.data))
+      .catch(err => console.error(err));
+  }, []);
+
   return (
-    <div className="min-h-screen bg-blue-50 p-8">
-      <h1 className="text-3xl font-bold mb-6">Meditation</h1>
+    <div className="p-6 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">🧠 Meditation</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Guided Meditation */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h2 className="text-xl font-semibold mb-2">
-            Guided Meditation
-          </h2>
-          <p className="text-gray-500 mb-4">
-            Voice-guided sessions for relaxation and focus
-          </p>
-          <button className="bg-purple-500 text-white px-4 py-2 rounded">
-            Start Guided Session
-          </button>
-        </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        {items.map(item => (
+          <div
+            key={item._id}
+            className="bg-white rounded-xl shadow p-4"
+          >
+            {/* Header */}
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="font-semibold text-lg">
+                {item.title}
+              </h2>
 
-        {/* Non-Guided Meditation */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          <h2 className="text-xl font-semibold mb-2">
-            Non-Guided Meditation
-          </h2>
-          <p className="text-gray-500 mb-4">
-            Silent meditation with calming background sounds
-          </p>
-          <button className="bg-indigo-500 text-white px-4 py-2 rounded">
-            Start Silent Session
-          </button>
-        </div>
+              <span
+                className={`text-xs px-2 py-1 rounded ${
+                  item.guided
+                    ? "bg-green-100 text-green-600"
+                    : "bg-gray-200 text-gray-600"
+                }`}
+              >
+                {item.guided ? "Guided" : "Non-Guided"}
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-500 mb-3">
+              {item.description}
+            </p>
+
+            {/* Media */}
+            {item.mediaType === "video" ? (
+              <video
+                controls
+                className="w-full rounded-lg h-56 object-cover"
+              >
+                <source
+                  src={item.cloudinaryUrl}
+                  type="video/mp4"
+                />
+              </video>
+            ) : (
+              <audio controls className="w-full">
+                <source
+                  src={item.cloudinaryUrl}
+                  type="audio/mpeg"
+                />
+              </audio>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

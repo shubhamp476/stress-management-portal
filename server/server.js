@@ -1,34 +1,52 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/db.js";
-
-import authRoutes from "./routes/authRoutes.js";
-import stressRoutes from "./routes/stressRoutes.js";
-import recommendationRoutes from "./routes/recommendationRoutes.js";
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 
 dotenv.config();
-connectDB();
+
+
+import authRoutes from "./routes/authRoutes.js";
+import adminAuthRoutes from "./routes/adminAuthRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import contentRoutes from "./routes/contentRoutes.js";
+
 
 const app = express();
 
-/* 🔥 CORS FIX (MOST IMPORTANT) */
+// 🔹 Middlewares
 app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true
+  origin: "http://localhost:5173", // frontend
+  credentials: true,
 }));
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+
 
 app.use("/api/auth", authRoutes);
-app.use("/api/stress", stressRoutes);
-app.use("/api/recommendations", recommendationRoutes);
+app.use("/api/admin/auth", adminAuthRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/content", contentRoutes);
 
+// 🔹 Test route
 app.get("/", (req, res) => {
-  res.send("Stress Management Backend Running 🚀");
+  res.send("Stress Management API running 🚀");
 });
 
+// 🔹 MongoDB connect
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("✅ MongoDB Connected");
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB connection error:", err);
+  });
