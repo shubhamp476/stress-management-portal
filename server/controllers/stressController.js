@@ -1,28 +1,30 @@
-import Stress from "../models/Stress.js";
+import StressHistory from "../models/StressHistory.js";
 import { calculateStress } from "../utils/stressLogic.js";
 
 export const submitStressTest = async (req, res) => {
   try {
     const { answers } = req.body;
 
-    if (!answers || answers.length === 0) {
-      return res.status(400).json({ message: "Answers are required" });
+    if (!answers || answers.length !== 10) {
+      return res.status(400).json({ message: "Invalid answers" });
     }
 
-    const result = calculateStress(answers);
+    const { score, level } = calculateStress(answers);
 
-    const stress = await Stress.create({
-      userId: req.user,
-      score: result.score,
-      level: result.level
+    const record = await StressHistory.create({
+      user: req.userId,
+      answers,
+      score,
+      level,
     });
 
     res.status(201).json({
-      message: "Stress test submitted",
-      stress
+      score,
+      level,
+      createdAt: record.createdAt,
     });
-
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    console.error("STRESS TEST ERROR:", err);
+    res.status(500).json({ message: "Failed to submit test" });
   }
 };

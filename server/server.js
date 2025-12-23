@@ -10,6 +10,13 @@ import authRoutes from "./routes/authRoutes.js";
 import adminAuthRoutes from "./routes/adminAuthRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import contentRoutes from "./routes/contentRoutes.js";
+import stressRoutes from "./routes/stressRoutes.js";
+
+
+
+
+
+
 
 
 const app = express();
@@ -30,6 +37,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/admin/auth", adminAuthRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/content", contentRoutes);
+app.use("/api/stress", stressRoutes);
+
 
 // 🔹 Test route
 app.get("/", (req, res) => {
