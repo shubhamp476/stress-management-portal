@@ -1,1 +1,18 @@
 @import "tailwindcss";
+.dashboard-btn {
+  @apply px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400/80 to-cyan-400/80 
+         text-black font-semibold shadow-md hover:shadow-xl transition duration-300;
+}
+
+.nav-link {
+  @apply text-white/90 hover:text-white transition duration-300 relative;
+}
+
+.nav-link::after {
+  content: "";
+  @apply absolute left-0 -bottom-1 h-[2px] w-0 bg-white transition-all duration-300;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}

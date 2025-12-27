@@ -13,11 +13,11 @@ const handleProtectedClick = (path) => {
 };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-cyan-400 p-6 ">
       
       
       {/* HEADER */}
-      <div className="mb-8">
+      <div className="mb-8 mt-20">
         <h1 className="text-3xl font-bold text-gray-800">
           Welcome back 🌿
         </h1>
